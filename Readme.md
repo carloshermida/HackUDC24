@@ -1,6 +1,8 @@
-# HackUDC
+# WattWise
 
-**Año 2024**
+![HackUDC](images/wattwise.jpg)
+
+**HackUDC 2024**
 
 Proyecto desarrollado en el hackatón *HackUDC 2024* como solución al reto propuesto por la empresa patrocinadora *Gradiant*. 
 
