@@ -13,12 +13,25 @@ header {
   align-items: center; 
 }
 
+.porcentaje {
+  font-size: 5vh;
+}
+
+#visualizaciones{
+  align-items: center;
+  justify-content: center;
+}
+
 header img {
   width: 15vw;
   max-width: 125px;
   height: auto;
   left: 15px;
   top: 0;
+}
+
+#aumento-mensual {
+  font-size: 10vh;
 }
 
 header h1 {
@@ -29,36 +42,6 @@ header h1 {
 body{
   margin-top: 200px;
 
-}
-.custom-file-upload {
-  margin-top: 10px;
-  border: 1px solid #ccc;
-  display: inline-block;
-  padding: 6px 12px;
-  cursor: pointer;
-  background-color: #f0f0f0;
-  color: #333;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
-
-.custom-file-upload:hover {
-  background-color: #e0e0e0;
-}
-
-#file-upload {
-  width: 50%; 
-  margin: auto; 
-  border: 2px solid #000000; 
-  padding: 30px; 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.file-upload-heading {
-  font-size: 24px;
 }
 
 button {

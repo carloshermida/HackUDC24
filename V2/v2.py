@@ -67,22 +67,21 @@ app.layout = html.Div(children=[
         ),
 
         # Porcentaje mensual
-       
-        html.H3(
-            'La factura ha variado respecto al mes pasado un '
-        ),
-        
-        html.H3(
-            id='aumento-mensual'
+        html.Span(
+            'La factura ha variado respecto al mes pasado un ',
+            className='porcentaje'
         ),
 
-        html.H3(
-            '%'
-        )
+        html.Span(
+            id='aumento-mensual',
+        ),
+
+        html.Span(
+            '%',
+            className='porcentaje'
+        ),
         ]
 )])
-
-
 
 # Callback para actualizar el contenido del almacenamiento con los datos del archivo cargado
 @app.callback([Output('store', 'data'),
@@ -161,7 +160,9 @@ def update_charts(stored_data):
     consumo_mes_anterior = df[(df['datetime'] >= fecha_inicio_mes_anterior) & (df['datetime'] < fecha_inicio_ultimo_mes)]['Consumo'].sum()
     aumento_porcentual = round(((consumo_ultimo_mes - consumo_mes_anterior) / consumo_mes_anterior) * 100, 2)
 
-    return fig1, fig2, aumento_porcentual
+
+
+    return fig1, fig2, str(aumento_porcentual)
 
 # Definir función para asignar categoría de tiempo
 def asignar_categoria_tiempo(dt):
