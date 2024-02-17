@@ -11,11 +11,13 @@ import tensorflow as tf
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from PIL import Image
+import time
+import streamlit as st
 
 def main():
     # Configurar el estilo de la página
     st.set_page_config(
-        page_title="Comprenda su consumo Eléctrico",
+        page_title="WattWise",
         page_icon="💡",
         layout="wide",
     )
@@ -34,7 +36,7 @@ def main():
     )
 
     # Título con color y emoticono
-    st.title("Comprende tu consumo Eléctrico 🌐💡")
+    st.title("WattWise - Comprenda su consumo Eléctrico 🌐💡")
     
     df = pd.read_csv("electrodatos.csv")
 
@@ -52,11 +54,11 @@ def main():
         return tokenizer.decode(output_ids[input_ids.shape[1]:], skip_special_tokens=True).strip()
 
     # Enlaces a las subpáginas
-    options = ["Comprenda cómo consume Energía", "Ahorra Energía y Dinero"]
+    options = ["Comprenda cómo consume Energía", "Ahorre Energía y Dinero"]
     selection = st.sidebar.radio("Ir a:", options)
 
     if selection == "Comprenda cómo consume Energía":
-        st.subheader("Página: Comprenda cómo consume Energía")
+        st.subheader("Comprenda cómo consume Energía")
         # Agrega aquí el contenido de la primera subpágina
         df['Fecha'] = df['Fecha'].apply(lambda x: pd.Timestamp(x))
         df['datetime'] = pd.to_datetime(df['datetime'])
@@ -126,13 +128,10 @@ def main():
 
         prompt2 = "A chat between an electric company client and an artificial intelligence assistant. The assistant gives helpful, detailed, clear and polite answers to the user's questions, explaining the answer to the user as to a kid. USER: <image>\nBased on this visualization, extract insights and useful conclusions about my weekly electric consumptions in the morning, afternoon and evening. ASSISTANT:"
         image2 = Image.open("images/visualization2.png")
-        text1 = str(explain_visualization(prompt2, image2))
+        with st.spinner('Esperando la explicación de WattWise...'):
+            text1 = str(explain_visualization(prompt2, image2))
+        st.success('Done!')
         st.markdown(text1)
-        # st.button("Reset", type="primary")
-        # if st.button('Say hello'):
-        #     st.write('Why hello there')
-        # else:
-        #     st.write('Goodbye')
 
         fecha_inicio_ultimo_mes = max(df['datetime']) - timedelta(days=30)
         consumo_ultimo_mes = df[df['datetime'] >= fecha_inicio_ultimo_mes]['Consumo'].sum()
@@ -157,16 +156,21 @@ def main():
 
         # prompt3 = "A chat between an electric company client and an artificial intelligence assistant. The assistant gives helpful, detailed, clear and polite answers to the user's questions, explaining the answer to the user as to a kid. USER: <image>\nBased on this visualization, extract insights and useful conclusions about the price of Kwh of electricity by day of the week and time of the day. ASSISTANT:"
         # image3 = Image.open("images/visualization3.png")
-        # text2 = explain_visualization(prompt3, image3)
-        # st.write(text2)
+        # with st.spinner('Esperando la explicación de WattWise...'):
+        #     text2 = explain_visualization(prompt3, image3)
+        # st.success('Done!')
+        # st.markdown(text2)
 
         st.title('Consumo semanal por horas del día')
         grafica4 = st.bar_chart(df.groupby(['day_of_week', 'Hour'])['Consumo'].mean().unstack().reindex(dias_ordenados))
 
         # prompt1 = "A chat between an electric company client and an artificial intelligence assistant. The assistant gives helpful, detailed, clear and polite answers to the user's questions, explaining the answer to the user as to a kid. USER: <image>\nBased on this visualization, extract insights and useful conclusions about my weekly electric consumptions in the different hours. Focus on recognizing patterns about the different hours. ASSISTANT:"
         # image1 = Image.open("images/visualization1.png")
-        # text3 = explain_visualization(prompt1, image1)
-        # st.write(text3)
+        # with st.spinner('Esperando la explicación de WattWise...'):
+        #     text3 = explain_visualization(prompt1, image1)
+        # st.success('Done!')
+        # st.markdown(text3)
+        
 
         df_prezo['Total'] = df_prezo['PCB'] * df['Consumo']
 
@@ -215,11 +219,13 @@ def main():
 
         # prompt4 = "A chat between an electric company client and an artificial intelligence assistant. The assistant gives helpful, detailed, clear and polite answers to the user's questions, explaining the answer to the user as to a kid. USER: <image>\nBased on this visualization, extract insights and useful conclusions about the mean price payed by the user in each day of the week. ASSISTANT:"
         # image4 = Image.open("images/visualization4.png")
-        # text4 = explain_visualization(prompt4, image4)
-        # st.write(text4)
+        # with st.spinner('Esperando la explicación de WattWise...'):
+        #     text4 = explain_visualization(prompt4, image4)
+        # st.success('Done!')
+        # st.markdown(text4)
 
-    elif selection == "Ahorra energía y dinero":
-        st.subheader("Página: Ahorra energía y dinero")
+    elif selection == "Ahorre Energía y Dinero":
+        st.subheader("Ahorre Energía y Dinero")
         # Agrega aquí el contenido de la segunda subpágina
         def requeriments_price():
             # Preprocesado
