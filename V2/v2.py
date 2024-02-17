@@ -7,6 +7,7 @@ from dash import dcc, html, dash_table
 from dash.exceptions import PreventUpdate
 import pandas as pd
 import plotly.express as px
+from datetime import timedelta, datetime
 
 # App de Dash
 app = dash.Dash(__name__)
@@ -63,10 +64,25 @@ app.layout = html.Div(children=[
         # Gráfica 2
         dcc.Graph(
             id='mean-consumption-by-time-of-day'
-        )
-    ]),
+        ),
 
-])
+        # Porcentaje mensual
+       
+        html.H3(
+            'La factura ha variado respecto al mes pasado un '
+        ),
+        
+        html.H3(
+            id='aumento-mensual'
+        ),
+
+        html.H3(
+            '%'
+        )
+        ]
+)])
+
+
 
 # Callback para actualizar el contenido del almacenamiento con los datos del archivo cargado
 @app.callback([Output('store', 'data'),
@@ -92,7 +108,7 @@ def update_upload_feedback(contents, filename):
         
         return df.to_json(date_format='iso', orient='split'), [html.P("El archivo se ha cargado correctamente!", style={'color': 'green'})]
     except Exception as e:
-        return "", [html.P('Error al cargar el archivo: {}'.format(filename), style={'color': 'red'})]
+        return [], [html.P('Error al cargar el archivo: {}'.format(filename), style={'color': 'red'})]
 
 # Callback para mostrar las visualizaciones cuando se presiona el botón correspondiente
 @app.callback(
@@ -107,8 +123,9 @@ def show_hide_visualizations(n_clicks):
 
 # Callback para generar las gráficas
 @app.callback(
-    Output('mean-consumption-by-hour', 'figure'),
+    [Output('mean-consumption-by-hour', 'figure'),
     Output('mean-consumption-by-time-of-day', 'figure'),
+    Output('aumento-mensual', 'children')],
     Input('store', 'data')
 )
 def update_charts(stored_data):
@@ -138,7 +155,13 @@ def update_charts(stored_data):
                   category_orders={'day_of_week': dias_ordenados},
                   color_discrete_map=color_map)
 
-    return fig1, fig2
+    fecha_inicio_ultimo_mes = max(df['datetime']) - timedelta(days=30)
+    consumo_ultimo_mes = df[df['datetime'] >= fecha_inicio_ultimo_mes]['Consumo'].sum()
+    fecha_inicio_mes_anterior = fecha_inicio_ultimo_mes - timedelta(days=30)
+    consumo_mes_anterior = df[(df['datetime'] >= fecha_inicio_mes_anterior) & (df['datetime'] < fecha_inicio_ultimo_mes)]['Consumo'].sum()
+    aumento_porcentual = round(((consumo_ultimo_mes - consumo_mes_anterior) / consumo_mes_anterior) * 100, 2)
+
+    return fig1, fig2, aumento_porcentual
 
 # Definir función para asignar categoría de tiempo
 def asignar_categoria_tiempo(dt):
@@ -149,6 +172,15 @@ def asignar_categoria_tiempo(dt):
         return 'Afternoon'
     else:
         return 'Night'
+
+def consumo_ultimo_mes(df):
+    # Calcular el número
+    fecha_inicio_ultimo_mes = max(df['datetime']) - timedelta(days=30)
+    # consumo_ultimo_mes = df[df['datetime'] >= fecha_inicio_ultimo_mes]['Consumo'].sum()
+    # fecha_inicio_mes_anterior = fecha_inicio_ultimo_mes - timedelta(days=30)
+    # consumo_mes_anterior = df[(df['datetime'] >= fecha_inicio_mes_anterior) & (df['datetime'] < fecha_inicio_ultimo_mes)]['Consumo'].sum()
+    # aumento_porcentual = ((consumo_ultimo_mes - consumo_mes_anterior) / consumo_mes_anterior) * 100
+    return fecha_inicio_ultimo_mes
 
 # Dash code
 if __name__ == '__main__':
