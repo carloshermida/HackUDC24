@@ -14,6 +14,7 @@ Las enfocadas a `conocer tu propia factura` 🧾 son:
   - Información sobre el precio de la luz medio por días de la semana y tramos horarios: permite comparar tus patrones de gasto con los precios de la luz.
   - Consumo semanal por horas del día y días de la semana: permiten identificar patrones de consumo, como horas especialmente activas o días no laborables.
   - Precio pagado por días de la semana y tramos horarios: junta la información sobre el uso del consumidor y los precios en esos momentos, para mostras días de mucho gasto, días muy rentables...
+Además, un modelo de lenguaje describe de forma detallada cada gráfica, de manera que el usuario tendrá una explicación personalizada generada automáticamente según su consumo eléctrico.
 
 Las funcionalidades enfocadas a `ahorrar en el consumo energético` 💰 son las siguientes:
   - Predicción del consumo energético futuro del cliente a través de una red de neuronas GRU
